@@ -9,6 +9,6 @@ shinyUI(pageWithSidebar(
   sidebarPanel(),
   
   mainPanel(
-    plotOutput("moz.map")
+    leafletOutput("moz.map")
   )
 ))
