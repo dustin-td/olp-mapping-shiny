@@ -15,32 +15,31 @@ kProvinces <- c('Zambezia', 'Nampula')
 shinyServer(function(input, output) {
 
   # Read in the shapefiles
-  moz <- readOGR(dsn=('gis/MOZ_adm1.shp'))
+  moz <- readOGR(dsn='gis/MOZ_adm1.shp')
   
   # Find the provinces of interest
   sel <- moz$NAME_1 %in% c('Zambezia', 'Nampula')
   
   moz@data$default_fill <- fills[1]
   moz@data[sel, ]$default_fill <- fills[2]
-  
+
   # Bounding boxes...
   # Hardcode the first one.
   kBounds <- c(21.5332, -26.94166, 49.52637, -10.35815)
-  bounds[[1]] <- list(lng1 = kBounds[1], lat1=kBounds[2], lng2=kBounds[3], lat2=kBounds[4])
+  views <- list()
+  views[[1]] <- list(lng = (kBounds[1]+kBounds[3])/2, lat=(kBounds[2]+kBounds[4])/2, zoom=5)
   
   for(province in kProvinces) {
     
-    province <- 'Zambezia'
     box <- bbox(moz[moz$NAME_1 == province, ])
     lng1 <- box['x', 'min']
     lat1 <- box['y', 'min']
     lng2 <- box['x', 'max']
     lat2 <- box['y', 'max']
-    
-    bounds[[length(bounds) + 1]] <- list(lng1=lng1, lat1=lat1, lng2=lng2, lat2=lat2)
-    
+  
+    views[[length(views) + 1]] <- list(lng=(lng1 + lng2)/2, lat=(lat1+lat2)/2, zoom=7)
   }
-  names(bounds) <- c('Global', kProvinces)
+  names(views) <- c('Global', kProvinces)
   
   # Split the layers into dynamic and non-dynamic shapes
   static.portion <- moz[!sel, ]
@@ -81,6 +80,8 @@ shinyServer(function(input, output) {
       new.leaf <- leafletProxy('moz.map')
       showGroup(new.leaf, paste0(click$id, '_adm'))
       hideGroup(new.leaf, c('static', kProvinces))
+      view <- views[[click$id]]
+      new.leaf <- setView(new.leaf, lng=view$lng, lat=view$lat, zoom=view$zoom)
       
     }
     
@@ -92,10 +93,12 @@ shinyServer(function(input, output) {
     if(is.null(click)) return()
 
     new.leaf <- leafletProxy('moz.map')
-    setView(new.leaf, lng=(30.21741 + 40.83931) / 2, lat=(-26.86869 + -10.47125)/2, zoom=4)
-    hideGroup(new.leaf, paste0(kProvinces, '_adm'))
-    showGroup(new.leaf, c('static', kProvinces))
+    #setView(new.leaf, lng=(30.21741 + 40.83931) / 2, lat=(-26.86869 + -10.47125)/2, zoom=4)
     
+    new.leaf <- hideGroup(new.leaf, paste0(kProvinces, '_adm'))
+    new.leaf <- showGroup(new.leaf, c('static', kProvinces))
+    view <- views[['Global']]
+    new.leaf <- setView(new.leaf, lng=view$lng, lat=view$lat, zoom=view$zoom, options=list(duration=50))
   })
 
 })
