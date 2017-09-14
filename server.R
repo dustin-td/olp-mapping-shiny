@@ -98,7 +98,7 @@ shinyServer(function(input, output) {
     new.leaf <- hideGroup(new.leaf, paste0(kProvinces, '_adm'))
     new.leaf <- showGroup(new.leaf, c('static', kProvinces))
     view <- views[['Global']]
-    new.leaf <- setView(new.leaf, lng=view$lng, lat=view$lat, zoom=view$zoom, options=list(duration=50))
+    new.leaf <- setView(new.leaf, lng=view$lng, lat=view$lat, zoom=view$zoom)
   })
 
 })
