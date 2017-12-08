@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<style>
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: sans-serif;
+    /*background: #C0D5FF;*/
+}
+
+nav {
+    width: 66%;
+    height: 15%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: #292f33;
+    border-bottom: 1px solid gray;
+    box-sizing: border-box;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    /*z-index: 20;*/
+    /*box-shadow: 0 4px 2px -2px #808080;*/
+    transition: width 0.25s;
+}
+
+#intro {
+    height: 75%;
+    width: 40%;
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    border: 1px solid gray;
+    padding: 2%;
+    color: #292f33;
+}
+
+.TextArea {
+    width: 34%;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    border-left: 1px solid gray;
+    /*box-shadow: -4px 0 2px #808080;*/
+    overflow: auto;
+    font-size: 200%;
+    box-sizing: border-box;
+    padding: 20px;
+    color: #292f33;
+    background: rgba(255, 255, 255, 1);
+}
+
+.ContentArea {
+    width: 66%;
+    height: 85%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+    transition: width 0.25s;
+}
+
+.introButton {
+    padding: 3px 8px 3px 8px;
+    border: 1px solid gray;
+    text-decoration: none;
+    color: #292f33
+    outline: none;
+    background-color: white;
+}
+
+.introButton:hover {
+    background-color: steelblue;
+    color: white;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+nav li {
+    display: table-cell;
+    text-align: center;
+}
+
+.button {
+    text-decoration: none;
+    background-color: white;
+    color: #292f33;
+    height: 90%;
+    width: 90%;
+    outline: none;
+    border: none;
+}
+
+.button:hover {
+    background-color: steelblue;
+    color: white;
+}
+
+
+</style>
+
+<head>
+    {{ headContent() }}
+    <script>
+        function show(shown) {
+            document.getElementById(shown).style.display='block';
+            // document.getElementById(hidden).style.display='none';
+            return false;
+        }
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".pages").hide();
+            $("nav li:first").addClass("current").show();
+            $("div.pages:first").show();
+            $("nav li").click(function() {
+                $("nav li").removeClass("current");
+                $("nav li").find("button").removeAttr("value");
+                $(this).addClass("current");
+                $(this).find("button").val("active")
+                $(".pages").hide();
+                var activePage = $(this).find("button").attr("name");
+                if ( $(this).find("button").is("[fullpage]") ) {
+                    $("#navbar").css("width", "100%");
+                    $(".ContentArea").css("width", "100%");
+                } else {
+                    $("#navbar").css("width", "66%");
+                    $(".ContentArea").css("width", "66%");
+                }
+                $(activePage).fadeIn();
+            });
+        });
+    </script>
+</head>
+
+<html>
+<body>
+    <!--div id="intro">
+        <h1>Introduction</h1>
+        <p>Some introductory text</p>
+        {{ action = actionButton("default", "Begin", onclick = "return show('main', 'intro')", class = "introButton") }}
+    </div-->
+    <!--div id="main" style="display: none;"-->
+    <div id="main">
+        <nav id="navbar">
+            <ul>
+                <li>{{ action1 = actionButton("n1", label = icon("map", "fa-3x"), name = "#narrative1", class = "button") }}
+                <li>{{ action2 = actionButton("n2", label = icon("line-chart", "fa-3x"), name = "#narrative2", class = "button") }}
+                <li>{{ action3 = actionButton("n3", label = icon("pie-chart", "fa-3x"), name = "#narrative3", class = "button", fullpage = "1") }}
+                <li>{{ action4 = actionButton("n4", label = icon("globe", "fa-3x"), name = "#narrative4", class = "button") }}
+                <li>{{ action5 = actionButton("n5", label = icon("balance-scale", "fa-3x"), name = "#narrative5", class = "button") }}
+            </ul>
+        </nav>
+        <div id="narrative1" class="pages">
+            <div id="content1" class="ContentArea">
+                {{ leafletOutput("map", width = "100%", height = "100%") }}
+            </div>
+            <div id="text1" class="TextArea">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat viverra nisi a maximus. Aenean blandit ex velit, id vestibulum turpis hendrerit id. Etiam ac ipsum mi. Phasellus nec nulla aliquam sem consectetur aliquam ornare et erat. Nulla lacinia arcu sapien, ac tincidunt dui euismod eu. In malesuada consequat purus, et sagittis purus malesuada vitae. Maecenas posuere nec ante vitae tempor.
+     Mauris sit amet fringilla sem. Quisque non velit et justo tempus molestie porta non lacus. Aliquam egestas ante ut tellus pharetra, quis efficitur arcu dapibus. Quisque aliquam ligula vitae purus aliquet finibus. Morbi massa est, interdum non tincidunt nec, finibus id eros. Nullam vel quam a ipsum volutpat placerat. Duis id ultricies nisi. Praesent egestas, enim ac rutrum scelerisque, purus est scelerisque neque, nec scelerisque urna lacus ut nisl.
+     Integer in arcu et arcu venenatis ornare et quis orci. Quisque euismod, leo a fringilla fermentum, lorem ipsum scelerisque mi, non luctus diam libero id felis. Mauris elementum erat sit amet ipsum pharetra mollis. Fusce eget auctor quam, vel molestie turpis. Sed sit amet consectetur elit. Donec ut metus mauris. Donec pulvinar, nulla et sodales condimentum, lectus libero auctor sapien, a rutrum elit massa ut nisl. Proin auctor magna at lectus sagittis laoreet. Mauris scelerisque id ligula in viverra. Donec aliquet aliquet varius. Morbi lacinia libero in sem tincidunt lacinia a eu sem. Nulla ex lacus, lacinia at convallis id, vehicula sit amet mi. Aenean porta commodo magna. Fusce ullamcorper nulla mi, id blandit erat eleifend ac. Phasellus tincidunt odio dolor, et vestibulum nibh aliquet eget. Nullam mollis turpis dignissim urna lobortis dignissim.
+     Nam lacinia, ante sit amet volutpat imperdiet, leo enim fermentum urna, vel blandit turpis purus condimentum risus. Integer quis consectetur erat, vel tincidunt lacus. Mauris ut purus nisi. Integer suscipit bibendum sem, sit amet maximus dolor porttitor non. Nulla non metus porta, feugiat ipsum eget, sodales ligula. In efficitur convallis odio. Duis euismod, diam vel auctor lobortis, leo elit lacinia ipsum, non viverra mi mi in lacus. Maecenas elementum tincidunt neque sed aliquet. Vivamus fermentum, nunc ut fringilla finibus, nunc lorem scelerisque tortor, vel egestas magna dui dapibus erat.
+     Etiam rutrum dui orci, sed maximus purus faucibus non. Pellentesque at magna justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed eget nibh ac dolor varius volutpat. Aenean commodo felis congue sodales vehicula. Donec at quam dictum, finibus enim ac, placerat felis. Suspendisse vel rhoncus sapien. Sed eu nulla vel ex tincidunt volutpat quis nec lorem. Maecenas vulputate rhoncus lacus vitae lobortis. Phasellus luctus tempus nisl, et vestibulum nulla elementum in. Duis at enim scelerisque, semper purus non, fermentum mauris. Duis id risus laoreet, molestie odio ac, feugiat odio.
+            </div>
+        </div>
+        <div id="narrative2" class="pages">
+            <div id="content2" class="ContentArea">
+                {{ leafletOutput("map2", width = "100%", height = "100%") }}
+            </div>
+            <div id="text2" class="TextArea">
+                Some text for the second narrative
+            </div>
+        </div>
+        <div id="narrative3" class="pages">
+            <div id="content3" class="ContentArea">
+                <img src="pane1.png" style="width:100%;">
+            </div>
+        </div>
+        <div id="narrative4" class="pages">
+            <div id="content4" class="ContentArea">
+                {{ leafletOutput("map3", width = "100%", height = "100%") }}
+            </div>
+            <div id="text4" class="TextArea">
+                Some text
+            </div>
+        </div>
+        <div id="narrative5" class="pages">
+            <div id="content5" class="ContentArea">
+                {{ leafletOutput("map4", width = "100%", height = "100%") }}
+            </div>
+            <div id="text5" class="TextArea">
+                Some text
+            </div>
+        </div>
+    </div>
